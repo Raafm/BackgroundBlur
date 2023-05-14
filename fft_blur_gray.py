@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 import cv2
 
 
-def fft_blurr(gray_img, nitidez = 10):
+def fft_blur(gray_img, nitidez = 10):
     # Apply 2D FFT
     f = np.fft.fft2(gray_img)
     fshift = np.fft.fftshift(f)

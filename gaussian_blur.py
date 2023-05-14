@@ -20,7 +20,7 @@ def gaussian_filter_generator (x_size,y_size) :
 
 
 
-def fft_gauss_blurr_gray(gray_img, nitidez = 10):
+def fft_gauss_blur_gray(gray_img, nitidez = 10):
     # Apply 2D FFT
     f = np.fft.fft2(gray_img)
     fshift = np.fft.fftshift(f)
@@ -49,10 +49,13 @@ def fft_gauss_blurr_gray(gray_img, nitidez = 10):
 
 
 
-def gaussian_blurr_background(model = None, input_file = None):
+def gaussian_blur_background(model = None, input_image = None):
     if model is None:
         model = load_model()
-    input_image = Image.open(input_file)
+    if input_image is None:
+        print( "No input image was passed to the function gaussian_blur_background")
+        return
+    
     preprocess = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
@@ -80,8 +83,7 @@ def gaussian_blurr_background(model = None, input_file = None):
     # apply mask for all 3 channels
     bin_mask3channels = np.stack((bin_mask, bin_mask, bin_mask), axis = -1)
     
-    # get image to apply blurr
-    input_image = Image.open(input_file)
+    # get image to apply blur
     input_image = np.array(input_image)
 
     # get 3 channels to apply fft
@@ -90,9 +92,9 @@ def gaussian_blurr_background(model = None, input_file = None):
     blue  = input_image[:,:,2] 
 
     # aplly blurr to all 3 channels
-    red_blurred   = fft_gauss_blurr_gray(red  , nitidez = 10 )
-    green_blurred = fft_gauss_blurr_gray(green, nitidez = 10 )
-    blue_blurred  = fft_gauss_blurr_gray(blue , nitidez = 10 )
+    red_blurred   = fft_gauss_blur_gray(red  , nitidez = 10 )
+    green_blurred = fft_gauss_blur_gray(green, nitidez = 10 )
+    blue_blurred  = fft_gauss_blur_gray(blue , nitidez = 10 )
 
     # juntar 3 channels borrados em uma so imagem
     background_blurred = np.stack((red_blurred, green_blurred, blue_blurred), axis = -1)

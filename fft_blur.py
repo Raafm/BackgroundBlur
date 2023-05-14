@@ -1,17 +1,19 @@
-from fft_blurr_gray import fft_blurr
+from fft_blur_gray import fft_blur
 import numpy as np
 import torch
 from torchvision import transforms
 from remove_background import load_model
 from PIL import Image
+from normalizar import normalizar
 
-def blurr_background(model = None, input_file = None):
+def blur_background(model = None, input_image= None):
     if model is None:                                                                    
         model = load_model()                                                    
 
-    normalizar = lambda input_tensor: (input_tensor - input_tensor.min())/(input_tensor.max() - input_tensor.min())
-    normalizar(np.array([1,2,3,4,5]))    
-    input_image = Image.open(input_file)
+        if input_image  is None:
+            print( "No input image was passed to the function blur_background")
+            return 
+    
     preprocess = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
@@ -33,14 +35,11 @@ def blurr_background(model = None, input_file = None):
     mask = output_predictions.byte().cpu().numpy()
 
     bin_mask = mask > 0
-    # plt.imshow(mask.astype('float'))
-    # plt.show()
 
     # apply mask for all 3 channels
     bin_mask3channels = np.stack((bin_mask, bin_mask, bin_mask), axis = -1)
     
     # get image to apply blurr
-    input_image = Image.open(input_file)
     input_image = np.array(input_image)
 
     # get 3 channels to apply fft
@@ -49,9 +48,9 @@ def blurr_background(model = None, input_file = None):
     blue  = input_image[:,:,2] 
 
     # aplly blurr to all 3 channels
-    red_blurred   = fft_blurr(red  , nitidez = 10 )
-    green_blurred = fft_blurr(green, nitidez = 10 )
-    blue_blurred  = fft_blurr(blue , nitidez = 10 )
+    red_blurred   = fft_blur(red  , nitidez = 10 )
+    green_blurred = fft_blur(green, nitidez = 10 )
+    blue_blurred  = fft_blur(blue , nitidez = 10 )
 
     # juntar 3 channels borrados em uma so imagem
     background_blurred = np.stack((red_blurred, green_blurred, blue_blurred), axis = -1)

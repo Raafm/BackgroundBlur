@@ -1,0 +1,1 @@
+normalizar = lambda input_tensor: (input_tensor - input_tensor.min())/(input_tensor.max() - input_tensor.min())

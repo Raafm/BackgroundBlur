@@ -1,11 +1,11 @@
 import tkinter as tk
 from PIL import ImageTk, Image
 import matplotlib.pyplot as plt
-from gaussian_blurr import gaussian_blurr_background
-from fft_blurr import blurr_background
+from gaussian_blur import gaussian_blur_background
+from fft_blur import blur_background
 
 import os
-IMAGES_FOLDER = "D:\Background Blurr\Imagens"
+IMAGES_FOLDER = "Images"
 
 def get_file_names(folder_path = IMAGES_FOLDER ):
     file_names = []
@@ -28,30 +28,25 @@ def plot_img_comparison(input_image, imagem_fundo_borrado):
     except:
         print("problemas com esta imagem, verifique a extensao e a escrita do arquivo")
 
-def make_background_blurr(image_path, blurr_type = "gaussian"):
-    print(blurr_type)
+def read_img_file(image_path = IMAGES_FOLDER + "/author.jpeg"):
     try: 
         input_image = Image.open(image_path)   
     except:
         image_path = os.path.join(IMAGES_FOLDER,image_path) 
         input_image = Image.open(image_path)   
+    return input_image  
+
+
+def make_background_blurr(image_path, blurr_type = "gaussian"):
+    input_image = read_img_file(image_path)
 
     if blurr_type == "gaussian":
-        blurred_image = gaussian_blurr_background(input_file = image_path)
+        blurred_image = gaussian_blur_background(input_image= input_image)
     elif blurr_type == "low-freq":
-        blurred_image = blurr_background(input_file = image_path)
+        blurred_image = blur_background(input_image= input_image)
     
 
     plot_img_comparison(input_image, blurred_image)
-
-    try:    
-        # Convert the image to a format that tkinter can display
-        tk_image = ImageTk.PhotoImage(blurred_image)
-
-        # Display the image on the canvas
-        canvas.create_image(0, 0, anchor=tk.NW, image=tk_image)
-    except:
-        print(f"could not display image {image_path} on canvas")
 
 
 # Define a function to update the dropdown menu
@@ -122,7 +117,7 @@ if  __name__ == "__main__":
     # Update the radio_button with the file names
     selected_filter = update_radio_button()
 
-    blurr_button = tk.Button(root,text = "blurr", command = lambda: make_background_blurr(image_path= var.get(), blurr_type = selected_filter.get()))  
+    blurr_button = tk.Button(root,text = "blur", command = lambda: make_background_blurr(image_path= var.get(), blurr_type = selected_filter.get()))  
     blurr_button.pack()
 
 

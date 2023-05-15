@@ -50,12 +50,12 @@ def make_background_blurr(image_path, blurr_type = "gaussian", save_img= True):
     plot_img_comparison(input_image, blurred_image)
 
     if save_img:
-        if "Blurred-Images" not in image_path:
-            image_path = os.path.join(BLURRED_FOLDER, image_path)
-
+        
+        image_path = os.path.join(BLURRED_FOLDER, blurr_type , image_path)
+    
         plt.imshow(blurred_image)
         plt.savefig(image_path)
-        plt.title("Image saved at " + image_path)
+        plt.title("Image saved at " +  image_path)
         plt.show()
 
 

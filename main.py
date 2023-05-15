@@ -6,6 +6,7 @@ from fft_blur import blur_background
 
 import os
 IMAGES_FOLDER = "Images"
+BLURRED_FOLDER = "Blurred-Images"
 
 def get_file_names(folder_path = IMAGES_FOLDER ):
     file_names = []
@@ -37,7 +38,7 @@ def read_img_file(image_path = IMAGES_FOLDER + "/author.jpeg"):
     return input_image  
 
 
-def make_background_blurr(image_path, blurr_type = "gaussian"):
+def make_background_blurr(image_path, blurr_type = "gaussian", save_img= True):
     input_image = read_img_file(image_path)
 
     if blurr_type == "gaussian":
@@ -47,6 +48,15 @@ def make_background_blurr(image_path, blurr_type = "gaussian"):
     
 
     plot_img_comparison(input_image, blurred_image)
+
+    if save_img:
+        if "Blurred-Images" not in image_path:
+            image_path = os.path.join(BLURRED_FOLDER, image_path)
+
+        plt.imshow(blurred_image)
+        plt.savefig(image_path)
+        plt.title("Image saved at " + image_path)
+        plt.show()
 
 
 # Define a function to update the dropdown menu
@@ -88,6 +98,7 @@ def update_radio_button():
 
 
 
+
 if  __name__ == "__main__":
         
     # Create the tkinter window
@@ -117,7 +128,24 @@ if  __name__ == "__main__":
     # Update the radio_button with the file names
     selected_filter = update_radio_button()
 
-    blurr_button = tk.Button(root,text = "blur", command = lambda: make_background_blurr(image_path= var.get(), blurr_type = selected_filter.get()))  
+
+    savefig_flag = tk.BooleanVar(root,value = True)
+    save_button = tk.Checkbutton(                               
+                                    root,      
+                                    text= "save-images",
+                                    variable= savefig_flag,
+                                )   
+    save_button.pack()
+
+    blurr_button = tk.Button(
+                            root,
+                            text = "blur",
+                            command = lambda: make_background_blurr(
+                                                                    image_path= var.get(),
+                                                                    blurr_type = selected_filter.get(),
+                                                                    save_img = savefig_flag.get()
+                                                                    )
+                            )  
     blurr_button.pack()
 
 

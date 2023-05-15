@@ -1,5 +1,5 @@
 import tkinter as tk
-from PIL import ImageTk, Image
+from PIL import Image
 import matplotlib.pyplot as plt
 from gaussian_blur import gaussian_blur_background
 from fft_blur import blur_background

@@ -1,9 +1,4 @@
 import numpy as np
-import torch
-from torchvision import transforms
-
-from PIL import Image
-from matplotlib import pyplot as plt
 import cv2
 
 

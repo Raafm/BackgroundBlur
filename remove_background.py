@@ -3,7 +3,7 @@ import numpy as np
 import torch
 from torchvision import transforms
 from PIL import Image
-from matplotlib import pyplot as plt
+
 
 def load_model():
     model = torch.hub.load('pytorch/vision:v0.10.0', 'deeplabv3_resnet50', pretrained=True)

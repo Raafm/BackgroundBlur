@@ -3,7 +3,6 @@ import numpy as np
 import torch
 from torchvision import transforms
 from remove_background import load_model
-from PIL import Image
 from normalizar import normalizar
 
 def blur_background(model = None, input_image= None):

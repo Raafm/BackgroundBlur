@@ -3,10 +3,8 @@ import cv2
 import numpy as np
 import torch
 from torchvision import transforms
-from PIL import Image
-from matplotlib import pyplot as plt
 from normalizar import normalizar   
-from remove_background import remove_background, load_model
+from remove_background import load_model
 
 normalization_term = 2*np.pi
 sigma_square = 10
